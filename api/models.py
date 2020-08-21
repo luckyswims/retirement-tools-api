@@ -4,7 +4,7 @@ from django.db import models
 class Annuity(models.Model):
     """Defines fields and methods of the Annuity resource model"""
     amount = models.DecimalField(max_digits=8,decimal_places=2)
-    duration = models.IntegerField()
+    duration = models.IntegerField(null=True, blank=True)
     
     def __str__(self):
         """Returns a string depiction of the model"""
