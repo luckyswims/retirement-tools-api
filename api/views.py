@@ -27,3 +27,19 @@ class AnnuityDetail(APIView):
         annuity = get_object_or_404(Annuity, pk=pk)
         data = AnnuitySerializer(annuity).data
         return Response(data)
+
+    def delete(self, request, pk):
+        """Delete Request"""
+        annuity = get_object_or_404(Annuity, pk=pk)
+        annuity.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    def patch(self, request, pk):
+        """Update Request"""
+        annuity = get_object_or_404(Annuity, pk=pk)
+        annuity_serialized = AnnuitySerializer(annuity, data=request.data['annuity'])
+        if annuity_serialized.is_valid():
+            annuity_serialized.save()
+            return Response(annuity_serialized.data)
+        else:
+            return Response(annuity_serialized.errors, status=status.HTTP_400_BAD_REQUEST)
