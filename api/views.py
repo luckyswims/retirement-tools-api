@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Annuity
 from .serializers import AnnuitySerializer
+from .pv import pv
 
 # Create your views here.
 class Annuities(APIView):
@@ -43,3 +44,8 @@ class AnnuityDetail(APIView):
             return Response(annuity_serialized.data)
         else:
             return Response(annuity_serialized.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PresentValue(APIView):
+    def get(self, request):
+        value = pv(request.data)
+        return Response(value)
