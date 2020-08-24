@@ -20,3 +20,10 @@ class Annuities(APIView):
             return Response(annuity.data, status=status.HTTP_201_CREATED)
         else:
             return Response(annuity.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AnnuityDetail(APIView):
+    def get(self, request, pk):
+        """Show Request"""
+        annuity = get_object_or_404(Annuity, pk=pk)
+        data = AnnuitySerializer(annuity).data
+        return Response(data)
