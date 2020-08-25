@@ -1,6 +1,6 @@
 from django.test import TestCase
 from .models import Annuity
-from .pv import pv, pvSingleRate
+from .pv import pv, pvSingleRate, pvPPARates
 
 # Create your tests here.
 class AnnuityTestCase(TestCase):
@@ -22,6 +22,10 @@ class PVFunctionsTestCase(TestCase):
         second = pvSingleRate(200, 10, 0.1)
         self.assertAlmostEqual(first, 454.5951, places=4)
         self.assertAlmostEqual(second, 1351.8048, places=4)
+
+    def test_pv_ppa_rates(self):
+        first = pvPPARates(100, 360, [0.01, 0.025, 0.05])
+        self.assertAlmostEqual(first, 26433.9046, places=4)
 
 class PVTestCase(TestCase):
     def test_pv_single_annuity_single_rate(self):
