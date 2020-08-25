@@ -13,9 +13,6 @@ def pvPPARates(amount, duration, rates):
     pv1 = pvSingleRate(amount, min(duration, 60), rate1)
     pv2 = pvSingleRate(amount, min(duration - 60, 180), rate2)
     pv3 = pvSingleRate(amount, (duration - 240), rate3)
-    print(pv1)
-    print(pv2)
-    print(pv3)
     pv = pv1 + pv2 * (v1 ** 60) + pv3 * (v2 ** 180) * (v1 ** 60)
     return pv
 

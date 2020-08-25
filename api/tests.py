@@ -18,14 +18,23 @@ class AnnuityTestCase(TestCase):
 
 class PVFunctionsTestCase(TestCase):
     def test_pv_single_rate(self):
+        """Base PV function works correctly"""
         first = pvSingleRate(100, 5, 0.05)
         second = pvSingleRate(200, 10, 0.1)
         self.assertAlmostEqual(first, 454.5951, places=4)
         self.assertAlmostEqual(second, 1351.8048, places=4)
 
     def test_pv_ppa_rates(self):
+        """Three Segment Rate PV function works correctly"""
+        #Longer than 20 years
         first = pvPPARates(100, 360, [0.01, 0.025, 0.05])
+        #Less than 20 years, more than 5
+        second = pvPPARates(100, 180, [0.01, 0.025, 0.05])
+        #Less than 5 years
+        third = pvPPARates(100, 48, [0.01, 0.025, 0.05])
         self.assertAlmostEqual(first, 26433.9046, places=4)
+        self.assertAlmostEqual(second, 15983.1710, places=4)
+        self.assertAlmostEqual(third, 4707.6829, places=4)
 
 class PVTestCase(TestCase):
     def test_pv_single_annuity_single_rate(self):
