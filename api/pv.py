@@ -18,5 +18,8 @@ def pvPPARates(amount, duration, rates):
 
 def pv(data):
     annuity = data["annuity"]
-    result = round(pvSingleRate(annuity["amount"],annuity["duration"],annuity["rate"]), 2)
+    if isinstance(annuity["rates"], list):
+        result = round(pvPPARates(annuity["amount"], annuity["duration"], annuity["rates"]), 2)
+    else:
+        result = round(pvSingleRate(annuity["amount"], annuity["duration"], annuity["rates"]), 2)
     return result

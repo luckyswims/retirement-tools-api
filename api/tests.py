@@ -42,8 +42,18 @@ class PVTestCase(TestCase):
             "annuity": {
                 "amount": 100,
                 "duration": 5,
-                "rate": 0.05
+                "rates": 0.05
             }
         }
-        first = pv(singleAnnuity)
-        self.assertAlmostEqual(first, 454.60)
+        singlePPAAnnuity = {
+            "annuity": {
+                "amount": 100,
+                "duration": 360,
+                "rates": [0.01, 0.025, 0.05]
+            }
+        }
+        single = pv(singleAnnuity)
+        singlePPA = pv(singlePPAAnnuity)
+        self.assertEqual(single, 454.60)
+        self.assertEqual(singlePPA, 26433.9)
+        
