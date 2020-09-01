@@ -46,6 +46,7 @@ class AnnuityDetail(APIView):
             return Response(annuity_serialized.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class PresentValue(APIView):
-    def get(self, request):
+    def post(self, request):
+        print(request)
         value = pv(request.data)
         return Response(value)
