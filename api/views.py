@@ -48,5 +48,6 @@ class AnnuityDetail(APIView):
 class PresentValue(APIView):
     def post(self, request):
         print(request)
-        value = pv(request.data)
-        return Response(value)
+        response = request.data
+        response["value"] = pv(request.data)
+        return Response(response)
