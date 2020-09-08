@@ -11,6 +11,26 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import django_heroku
+import os
+import dj_database_url
+
+# .env config:
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
+
+# Determine if we are on local or production and setup variables accordingly
+if os.getenv('ENV') == 'development':
+    DB = {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME_DEV'),
+    }
+    DEBUG = True
+    CORS_ALLOWED_ORIGINS = ['http://localhost:1234']
+else:
+    DB = dj_database_url.config()
+    DEBUG = False
+    CORS_ALLOWED_ORIGINS = ['https://luckyswims.github.io/retirement-tools-client']
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -20,7 +40,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'zud+rs_fkolb!-1bb+_*1q!r2hj-i__cq&%vbm%#tel@m02s)g'
+SECRET_KEY = os.getenv('SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -125,3 +145,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
