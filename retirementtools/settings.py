@@ -30,7 +30,7 @@ if os.getenv('ENV') == 'development':
 else:
     DB = dj_database_url.config()
     DEBUG = False
-    CORS_ALLOWED_ORIGINS = ['https://luckyswims.github.io/retirement-tools-client']
+    CORS_ALLOWED_ORIGINS = ['https://master.d33yvcwrnx2v7g.amplifyapp.com/']
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
