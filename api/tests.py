@@ -37,23 +37,59 @@ class PVFunctionsTestCase(TestCase):
         self.assertAlmostEqual(third, 4707.6829, places=4)
 
 class PVTestCase(TestCase):
-    def test_pv_single_annuity_single_rate(self):
+    def test_pv_single_annuity(self):
         singleAnnuity = {
-            "annuity": {
+            "annuities": [{
                 "amount": 100,
                 "duration": 5,
                 "rates": 0.05
-            }
+            }]
         }
         singlePPAAnnuity = {
-            "annuity": {
+            "annuities": [{
                 "amount": 100,
                 "duration": 360,
                 "rates": [0.01, 0.025, 0.05]
-            }
+            }]
         }
         single = pv(singleAnnuity)
         singlePPA = pv(singlePPAAnnuity)
         self.assertEqual(single, 454.60)
         self.assertEqual(singlePPA, 26433.9)
+    
+    def test_pv_multiple_annuities(self):
+        multipleAnnuity = {
+            "annuities": [{
+                "amount": 100,
+                "duration": 5,
+                "rates": 0.05
+            },
+            {
+                "amount": 200,
+                "duration": 10,
+                "rates": 0.1
+            }]
+        }
+        multiplePPAAnnuity = {
+            "annuities": [{
+                "amount": 100,
+                "duration": 360,
+                "rates": [0.01, 0.025, 0.05]
+            },
+            {
+                "amount": 100,
+                "duration": 180,
+                "rates": [0.01, 0.025, 0.05]
+            },
+            {
+                "amount": 100,
+                "duration": 48,
+                "rates": [0.01, 0.025, 0.05]
+            }]
+        }
+        
+        multiple = pv(multipleAnnuity)
+        multiplePPA = pv(multiplePPAAnnuity)
+        self.assertEqual(multiple, 1806.4)
+        self.assertEqual(multiplePPA, 47124.75)
         

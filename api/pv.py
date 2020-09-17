@@ -16,10 +16,17 @@ def pvPPARates(amount, duration, rates):
     pv = pv1 + pv2 * (v1 ** 60) + pv3 * (v2 ** 180) * (v1 ** 60)
     return pv
 
-def pv(data):
-    annuity = data["annuity"]
+def pvSingleAnnuity(annuity):
     if isinstance(annuity["rates"], list):
         result = round(pvPPARates(annuity["amount"], annuity["duration"], annuity["rates"]), 2)
     else:
         result = round(pvSingleRate(annuity["amount"], annuity["duration"], annuity["rates"]), 2)
     return result
+
+def pv(data):
+    annuities = data["annuities"]
+    result = 0
+    for annuity in annuities:
+        result += pvSingleAnnuity(annuity)
+    return result
+    
