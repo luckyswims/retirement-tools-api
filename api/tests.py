@@ -1,6 +1,6 @@
 from django.test import TestCase
 from .models import Annuity
-from .pv import pv, pvSingleRate, pvPPARates, deferralSingleRate
+from .pv import pv, pvSingleRate, pvPPARates, deferralSingleRate, deferralPPA, pvPPADeferred
 
 # Create your tests here.
 class AnnuityTestCase(TestCase):
@@ -37,33 +37,37 @@ class PVFunctionsTestCase(TestCase):
         self.assertAlmostEqual(third, 4707.6829, places=4)
         
     def test_deferral_single_rate(self):
+        """Base deferral works correctly"""
         first = deferralSingleRate(495.96, 0.05, 5)
         second = deferralSingleRate(1930.28, 0.1, 5)
         self.assertAlmostEqual(first, 485.9793, places=4)
         self.assertAlmostEqual(second, 1855.1258, places=4)
 
-    def test_deferral_ppa(self):    
-        first = deferralPPA(3548.27, [0.01, 0.025, 0.05], 24)
-        second = deferralPPA(17637.24, [0.01, 0.025, 0.05], 72)
-        third = deferralPPA(10088.62, [0.01, 0.025, 0.05], 252)
-        self.assertAlmostEqual(first, 3478.3551, places=4)
-        self.assertAlmostEqual(second, 16371.9304, places=4)
-        self.assertAlmostEqual(third, 6312.1544, places=4)
+    def test_deferral_ppa(self):
+        """Three Segment Rate deferral works correctly""" 
+        first = deferralPPA(2377.26, [0.01, 0.025, 0.05], 24)
+        second = deferralPPA(18644.88, [0.01, 0.025, 0.05], 72)
+        third = deferralPPA(15356.66, [0.01, 0.025, 0.05], 252)
+        self.assertAlmostEqual(first, 2330.4186, places=4)
+        self.assertAlmostEqual(second, 17307.2815, places=4)
+        self.assertAlmostEqual(third, 9608.2130, places=4)
     
     def test_pv_ppa_deferred(self):
+        """Three Segment Rate PV with deferral works correctly"""
         first = pvPPADeferred(100, 24, [0.01, 0.025, 0.05], 24)
         second = pvPPADeferred(100, 180, [0.01, 0.025, 0.05], 24)
         third = pvPPADeferred(100, 240, [0.01, 0.025, 0.05], 24)
         fourth = pvPPADeferred(100, 240, [0.01, 0.025, 0.05], 72)
         fifth = pvPPADeferred(100, 240, [0.01, 0.025, 0.05], 252)
-        self.assertAlmostEqual(first, 3478.3547, places=4)
-        self.assertAlmostEqual(second, 15114.3643, places=4)
-        self.assertAlmostEqual(third, 18998.9106, places=4)
-        self.assertAlmostEqual(fourth, 16371.9283, places=4)
-        self.assertAlmostEqual(fifth, 6312.1548, places=4)
+        self.assertAlmostEqual(first, 2330.4207, places=4)
+        self.assertAlmostEqual(second, 15348.2482, places=4)
+        self.assertAlmostEqual(third, 19310.8738, places=4)
+        self.assertAlmostEqual(fourth, 17307.2798, places=4)
+        self.assertAlmostEqual(fifth, 9608.2100, places=4)
         
 class PVTestCase(TestCase):
     def test_pv_single_annuity(self):
+        """PV function works for single annuity single rate"""
         singleAnnuity = {
             "annuities": [{
                 "amount": 100,
@@ -80,10 +84,11 @@ class PVTestCase(TestCase):
         }
         single = pv(singleAnnuity)
         singlePPA = pv(singlePPAAnnuity)
-        self.assertEqual(single, 495.96)
-        self.assertEqual(singlePPA, 26433.9)
+        self.assertEqual(single, [495.96])
+        self.assertEqual(singlePPA, [26433.9])
     
     def test_pv_multiple_annuities(self):
+        """PV function works for multiple annuities"""
         multipleAnnuity = {
             "annuities": [{
                 "amount": 100,
@@ -116,10 +121,11 @@ class PVTestCase(TestCase):
         
         multiple = pv(multipleAnnuity)
         multiplePPA = pv(multiplePPAAnnuity)
-        self.assertEqual(multiple, 2426.24)
-        self.assertEqual(multiplePPA, 47124.75)
+        self.assertEqual(multiple, [495.96, 1930.28])
+        self.assertEqual(multiplePPA, [26433.9, 15983.17, 4707.68])
         
     def test_pv_single_deferred(self):
+        """PV function works with deferral"""
         singleAnnuity = {
             "annuities": [{
                 "amount": 100,
@@ -138,5 +144,5 @@ class PVTestCase(TestCase):
         }
         single = pv(singleAnnuity)
         singlePPA = pv(singlePPAAnnuity)
-        self.assertEqual(single, 485.98)
-        self.assertEqual(singlePPA, 18998.91)
+        self.assertEqual(single, [485.98])
+        self.assertEqual(singlePPA, [18998.91])
