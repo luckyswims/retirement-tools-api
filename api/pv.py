@@ -11,6 +11,11 @@ def deferralSingleRate(value, rate, deferral):
     pv = value * v ** deferral
     return pv
 
+def pvSingleDeferred(amount, duration, rate, deferral):
+    pv = pvSingleRate(amount, duration, rate)
+    result = deferralSingleRate(pv, rate, deferral)
+    return result
+
 def pvPPARates(amount, duration, rates):
     rate1 = ((1 + rates[0]) ** (1/12)) - 1
     rate2 = ((1 + rates[1]) ** (1/12)) - 1
@@ -49,9 +54,9 @@ def pvPPADeferred(amount, duration, rates, deferral):
 
 def pvSingleAnnuity(annuity):
     if isinstance(annuity["rates"], list):
-        result = round(pvPPARates(annuity["amount"], annuity["duration"], annuity["rates"]), 2)
+        result = round(pvPPADeferred(annuity["amount"], annuity["duration"], annuity["rates"], annuity["deferral"]), 2)
     else:
-        result = round(pvSingleRate(annuity["amount"], annuity["duration"], annuity["rates"]), 2)
+        result = round(pvSingleDeferred(annuity["amount"], annuity["duration"], annuity["rates"], annuity["deferral"]), 2)
     return result
 
 def pv(data):
